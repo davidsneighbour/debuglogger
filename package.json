@@ -1,7 +1,7 @@
 {
   "name": "@davidsneighbour/debuglogger",
   "description": "A customizable logging wrapper for debugging with log levels, external handlers, and console replacement.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "repository": {
     "type": "git",
