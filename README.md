@@ -1,9 +1,9 @@
-DebugLogger is a customizable logging wrapper that enhances debugging with log levels, external handlers, and console replacement.
+debuglogger is a customizable logging wrapper that enhances debugging with log levels, external handlers, and console replacement.
 
 ## Installation
 
 ```bash
-npm install debug-logger
+npm install @davidsneighbour/debuglogger
 ```
 
 ## Usage
@@ -11,7 +11,7 @@ npm install debug-logger
 ### Importing and Using the Singleton Instance
 
 ```javascript
-import DebugLogger, { logger } from './DebugLogger.js';
+import debuglogger, { logger } from './debuglogger.js';
 
 // Use the singleton instance
 logger.log('This is a log message');
@@ -22,7 +22,7 @@ logger.error('This is an error');
 ### Creating a Custom Logger Instance
 
 ```javascript
-const customLogger = new DebugLogger(true, 'warn');
+const customLogger = new debuglogger(true, 'warn');
 
 customLogger.log('This will not log because log level is warn');
 customLogger.warn('This is a warning');
@@ -54,11 +54,11 @@ logger.info('This will log');
 ### Replacing Console Methods Globally
 
 ```javascript
-import { replaceConsole, restoreConsole } from './DebugLogger.js';
+import { replaceConsole, restoreConsole } from './debuglogger.js';
 
 replaceConsole(logger);
 
-console.log('This is now handled by DebugLogger');
+console.log('This is now handled by debuglogger');
 
 restoreConsole(); // Restore original console methods
 ```

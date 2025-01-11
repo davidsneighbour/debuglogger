@@ -1,6 +1,6 @@
 
 
-export default class DebugLogger {
+export default class debuglogger {
   constructor(debugEnabled = false, logLevel = 'debug') {
     this.debugEnabled = debugEnabled;
     this.logLevels = ['error', 'warn', 'info', 'debug', 'trace'];
@@ -108,7 +108,7 @@ export default class DebugLogger {
   }
 }
 
-const logger = new DebugLogger(false);
+const logger = new debuglogger(false);
 
 export function replaceConsole(loggerInstance) {
   const originalConsole = { ...console }; // Backup original console

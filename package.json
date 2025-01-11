@@ -29,10 +29,10 @@
     "test": "vitest run",
     "test:monitor": "vitest"
   },
-  "main": "dist/DebugLogger.js",
+  "main": "dist/debuglogger.js",
   "files": [
     "dist"
   ],
-  "module": "src/DebugLogger.js",
+  "module": "src/debuglogger.js",
   "type": "module"
 }

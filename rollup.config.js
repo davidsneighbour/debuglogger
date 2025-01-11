@@ -1,7 +1,7 @@
 export default {
-  input: 'src/DebugLogger.js',
+  input: 'src/debuglogger.js',
   output: {
-    file: 'dist/DebugLogger.js',
+    file: 'dist/debuglogger.js',
     format: 'esm',
     sourcemap: true,
     compact: true, // Enables basic minification
