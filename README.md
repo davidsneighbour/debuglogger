@@ -11,9 +11,8 @@ npm install @davidsneighbour/debuglogger
 ### Importing and Using the Singleton Instance
 
 ```javascript
-import debuglogger, { logger } from './debuglogger.js';
+import { logger } from '@davidsneighbour/debuglogger';
 
-// Use the singleton instance
 logger.log('This is a log message');
 logger.warn('This is a warning');
 logger.error('This is an error');
@@ -22,6 +21,8 @@ logger.error('This is an error');
 ### Creating a Custom Logger Instance
 
 ```javascript
+import debuglogger from '@davidsneighbour/debuglogger';
+
 const customLogger = new debuglogger(true, 'warn');
 
 customLogger.log('This will not log because log level is warn');
