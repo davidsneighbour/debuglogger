@@ -1,17 +1,30 @@
-
-
-export default class debuglogger {
-  constructor(debugEnabled = false, logLevel = 'debug') {
+class debuglogger {
+  /**
+   * @param debugEnabled - Enable or disable debug output
+   * @param logLevel - Minimum log level to show
+   * @param prefixText - The text prefix for each log
+   * @param prefixColor - CSS color string for the prefix
+   */
+  constructor(
+    debugEnabled = false,
+    logLevel = 'debug',
+    prefixText = 'LOGGER:',
+    prefixColor = '#ff5500',
+  ) {
     this.debugEnabled = debugEnabled;
     this.logLevels = ['error', 'warn', 'info', 'debug', 'trace'];
     this.logLevel = logLevel;
     this.handler = null;
 
-    // Store original console methods
+    this.prefixText = prefixText;
+    this.prefixColor = prefixColor;
+
     this.originalConsole = { ...console };
 
-    // Environment check
-    if (typeof window !== 'undefined' && typeof window.location !== 'undefined') {
+    if (
+      typeof window !== 'undefined' &&
+      typeof window.location !== 'undefined'
+    ) {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('debug') === 'true') {
         this.debugEnabled = true;
@@ -19,20 +32,33 @@ export default class debuglogger {
     }
   }
 
+  /**
+   * @param level - Set the minimum log level
+   */
   setLogLevel(level) {
     if (this.logLevels.includes(level)) {
       this.logLevel = level;
     } else {
       console.warn(
-        `Invalid log level: ${level}. Valid levels are: ${this.logLevels.join(
-          ", "
-        )}`
+        `Invalid log level: ${level}. Valid levels are: ${this.logLevels.join(', ')}`,
       );
     }
   }
 
+  /**
+   * @param handler - Optional handler to override logging behavior
+   */
   setHandler(handler) {
     this.handler = handler;
+  }
+
+  /**
+   * @param text - Set prefix label
+   * @param color - Set prefix color (CSS format)
+   */
+  setPrefix(text, color = '#ff5500') {
+    this.prefixText = text;
+    this.prefixColor = color;
   }
 
   logMethod(method, level, ...args) {
@@ -40,13 +66,14 @@ export default class debuglogger {
       this.debugEnabled &&
       this.logLevels.indexOf(level) <= this.logLevels.indexOf(this.logLevel)
     ) {
+      const prefix = `%c${this.prefixText}`;
+      const style = `color: ${this.prefixColor}; font-weight: bold`;
       if (this.handler) {
-        this.handler(method, args);
+        this.handler(method, [prefix, style, ...args]);
       } else if (this.originalConsole[method]) {
-        this.originalConsole[method](...args);
+        this.originalConsole[method](prefix, style, ...args);
       } else {
-        // Fallback if console method is unavailable
-        this.originalConsole.log(`[${method.toUpperCase()}]:`, ...args);
+        this.originalConsole.log(prefix, style, ...args);
       }
     }
   }
@@ -54,51 +81,52 @@ export default class debuglogger {
   enableDebug() {
     this.debugEnabled = true;
   }
+
   disableDebug() {
     this.debugEnabled = false;
   }
 
   log(...args) {
-    this.logMethod("log", "debug", ...args);
+    this.logMethod('log', 'debug', ...args);
   }
   warn(...args) {
-    this.logMethod("warn", "warn", ...args);
+    this.logMethod('warn', 'warn', ...args);
   }
   error(...args) {
-    this.logMethod("error", "error", ...args);
+    this.logMethod('error', 'error', ...args);
   }
   info(...args) {
-    this.logMethod("info", "info", ...args);
+    this.logMethod('info', 'info', ...args);
   }
   trace(...args) {
-    this.logMethod("trace", "trace", ...args);
+    this.logMethod('trace', 'trace', ...args);
   }
   group(...args) {
-    this.logMethod("group", "debug", ...args);
+    this.logMethod('group', 'debug', ...args);
   }
   groupCollapsed(...args) {
-    this.logMethod("groupCollapsed", "debug", ...args);
+    this.logMethod('groupCollapsed', 'debug', ...args);
   }
   groupEnd() {
-    this.logMethod("groupEnd", "debug");
+    this.logMethod('groupEnd', 'debug');
   }
   assert(...args) {
-    this.logMethod("assert", "error", ...args);
+    this.logMethod('assert', 'error', ...args);
   }
   clear() {
-    this.logMethod("clear", "debug");
+    this.logMethod('clear', 'debug');
   }
   table(...args) {
-    this.logMethod("table", "debug", ...args);
+    this.logMethod('table', 'debug', ...args);
   }
   time(label) {
-    this.logMethod("time", "debug", label);
+    this.logMethod('time', 'debug', label);
   }
   timeEnd(label) {
-    this.logMethod("timeEnd", "debug", label);
+    this.logMethod('timeEnd', 'debug', label);
   }
   count(label) {
-    this.logMethod("count", "debug", label);
+    this.logMethod('count', 'debug', label);
   }
 
   restoreConsole() {
@@ -110,23 +138,26 @@ export default class debuglogger {
 
 const logger = new debuglogger(false);
 
-export function replaceConsole(loggerInstance) {
-  const originalConsole = { ...console }; // Backup original console
+/**
+ * @param loggerInstance - A debuglogger instance
+ */
+function replaceConsole(loggerInstance) {
+  const originalConsole = { ...console };
   [
-    "log",
-    "warn",
-    "error",
-    "info",
-    "trace",
-    "group",
-    "groupCollapsed",
-    "groupEnd",
-    "assert",
-    "clear",
-    "table",
-    "time",
-    "timeEnd",
-    "count",
+    'log',
+    'warn',
+    'error',
+    'info',
+    'trace',
+    'group',
+    'groupCollapsed',
+    'groupEnd',
+    'assert',
+    'clear',
+    'table',
+    'time',
+    'timeEnd',
+    'count',
   ].forEach((method) => {
     console[method] = (...args) => loggerInstance[method](...args);
   });
@@ -138,4 +169,4 @@ export function replaceConsole(loggerInstance) {
   };
 }
 
-export { logger };
+export { debuglogger as default, logger, replaceConsole };
